@@ -1,0 +1,25 @@
+[
+  {
+    "startTime":60,
+    "endTime":120,
+    "status":"ocupado"
+  },
+  {
+    "startTime":170,
+    "endTime":200,
+    "status":"ocupado"
+  },  {
+      "startTime":210,
+      "endTime":250,
+      "status":"ocupado"
+    },  {
+        "startTime":250,
+        "endTime":300,
+        "status":"ocupado"
+      },
+      {
+         "startTime":300,
+         "endTime":350,
+         "status":"ocupado"
+       }
+]

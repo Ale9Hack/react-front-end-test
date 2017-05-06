@@ -1,0 +1,56 @@
+[
+  {"day":"Lunes 21",
+    "month":"Octubre",
+    "year":"2015",
+    "schedule":"Tarde",
+    "status":"open"
+  },
+  {"day":"Marters 22",
+    "month":"Octubre",
+    "year":"2015",
+    "schedule":"Tarde",
+    "status":"open"
+  },
+  {"day":"Miercoles 23",
+    "month":"Octubre",
+    "year":"2015",
+    "schedule":"Noche",
+    "status":"close"
+  },
+  {"day":"Miercoles 23",
+    "month":"Octubre",
+    "year":"2015",
+    "schedule":"Noche",
+    "status":"close"
+  },
+  {"day":"Miercoles 23",
+    "month":"Octubre",
+    "year":"2015",
+    "schedule":"Noche",
+    "status":"close"
+  },
+  {"day":"Miercoles 23",
+    "month":"Octubre",
+    "year":"2015",
+    "schedule":"Noche",
+    "status":"close"
+  },
+  {"day":"Miercoles 23",
+    "month":"Octubre",
+    "year":"2015",
+    "schedule":"Noche",
+    "status":"close"
+  },
+  {"day":"Miercoles 23",
+    "month":"Octubre",
+    "year":"2015",
+    "schedule":"Noche",
+    "status":"close"
+  },
+  {"day":"Miercoles 23",
+    "month":"Octubre",
+    "year":"2015",
+    "schedule":"Noche",
+    "status":"close"
+  }
+ ]
