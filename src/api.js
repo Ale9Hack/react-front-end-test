@@ -40,7 +40,7 @@ this.setState({array:array});
 class Api {
   constructor(fake) {
     this.apiURL='http://127.0.0.1:3000/api/'
-    this.dayOfWeekStr=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+    this.dayOfWeekStr=[]
 
    if (fake===false) {
      this.endPoints={
@@ -52,10 +52,20 @@ class Api {
      getDays:"./fakedb/days.json",     getTurns:"./fakedb/turns.json"
      }
    }
+}
 
+
+updateDayOfTheWeekStr(){
+  var width = window.innerWidth, height = window.innerHeight
+  if(height>500){
+    return    this.dayOfWeekStr=['domingo','lunes','martes','miércoles','jueves','viernes','sábado']; }
+  else {
+    return   this.dayOfWeekStr=['dom','lun','mar','mié','jue','vie','sáb']
+  }
 }
 
 createCalendar(options,data,callback){
+return new Promise((resolve,reject)=>{
   var perPage=data.perPage;
   var months=Array.isArray(data.months)?data.months:[];
   var days=[]
@@ -71,7 +81,6 @@ createCalendar(options,data,callback){
   var lastDayOfTheWeek=moment(lastDayOfTheMonth).endOf('isoWeek').subtract(fixStartWeek,'days');
   var currentDay=firstDayOfTheMonth;
   var daysInMonth=moment().add(isNext,'month').daysInMonth();
-  console.log(month);
 
 //Fixed day of prev month and next month
 function fixedDays(){
@@ -98,8 +107,8 @@ fixedDays()
 
   console.log(days);
   months.push({name:month,days:days,prevDays:prevDays,nextDays:nextDays})
-  callback({months:months,dayOfWeekStr:this.dayOfWeekStr})
-}
+  resolve({months:months})
+})}
 
 getDays(options,data,callback){
 
@@ -125,7 +134,6 @@ getTurns(options,callback){
   //Datos requeridos en la api
     var finish=400;
     var interval=10;
-
     var lastTime=-1;
     var count=0;
   // duplica variable para poder procesar un vector ultilizando promises y map.
@@ -135,13 +143,9 @@ getTurns(options,callback){
             count+=1;
           }
    lastTime=res[index].endTime;
-   if(res.length-1==index){
-     if (lastTime+interval<=finish) {
+     if (res.length-1==index&&lastTime+interval<=finish) {
        res.push({startTime:'none',status:'disponible'});
      }
-
-   }
-
 
   }
   callback(res)

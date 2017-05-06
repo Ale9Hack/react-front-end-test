@@ -17,18 +17,18 @@ const DayOfWeek=(props)=>{
 return(
 <article className={props.status+' day-of-week'}>
   <div className='container'>
-    <header>
     <h2>{props.day}</h2>
-    </header></div>
+    </div>
 </article>
 );
 }
 
 const Preview=(props)=>{
 return(
-<h2>
-  Hola mundo
-</h2>
+<section id='preview'>
+<h2>Dia</h2>
+<p>Informacion:</p>
+</section>
 );
 }
 
@@ -40,10 +40,10 @@ export default class Days  extends Component{
       dayOfWeekStr:[]}
     };
     componentDidMount() {
-      api.createCalendar(null,{months:this.state.months},(res)=>{
-        this.setState({months:res.months,dayOfWeekStr:res.dayOfWeekStr});
+      api.createCalendar(null,{months:this.state.months}).then((res)=>{
+        this.setState({months:res.months,dayOfWeekStr:api.updateDayOfTheWeekStr()});
       });
-      }
+  }
 handleClick(event){
 this.props.passDaytoTurn(event)
 }
@@ -51,8 +51,8 @@ moveCalendar (event){
 event.preventDefault()
 var target = event.currentTarget.id
 if (target=='calendar-right-button') {
-  api.createCalendar(null,{months:this.state.months},(res)=>{
-    this.setState({months:res.months,dayOfWeekStr:res.dayOfWeekStr});
+  api.createCalendar(null,{months:this.state.months}).then((res)=>{
+    this.setState({months:res.months,dayOfWeekStr:api.updateDayOfTheWeekStr()});
   });
 }
 else{
