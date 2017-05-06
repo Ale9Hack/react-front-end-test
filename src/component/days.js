@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import api from '../api';
 import PropTypes from 'prop-types';
-
+import api from '../api';
 //static props declatation
 const Day=(props)=>{
 return(
-<article onClick={props.handleClick} className={props.status+' Day'} data-day={props.date}>
+<article onClick={props.handleClick} className={props.status+' Day'} data-day={props.fullDay}>
   <div className='container'>
     <h2>{props.day}</h2>
   </div>
@@ -24,10 +23,16 @@ return(
 }
 
 const Preview=(props)=>{
+if(props.day){
+var button = <button type='button'>Continuar</button>;
+}
 return(
 <section id='preview'>
-<h2>Dia</h2>
-<p>Informacion:</p>
+<h2>{props.day}</h2>
+<p>Turno</p>
+<footer>
+{button}
+</footer>
 </section>
 );
 }
@@ -37,7 +42,7 @@ export default class Days  extends Component{
   constructor(props) {
     super(props)
     this.state={months:[],
-      dayOfWeekStr:[]}
+      dayOfWeekStr:[],currentDay:''}
     };
     componentDidMount() {
       api.createCalendar(null,{months:this.state.months}).then((res)=>{
@@ -45,7 +50,10 @@ export default class Days  extends Component{
       });
   }
 handleClick(event){
-this.props.passDaytoTurn(event)
+let day=event.currentTarget.getAttribute('data-day');
+console.log(day);
+this.setState({currentDay:day})
+//this.props.passDaytoTurn(event)
 }
 moveCalendar (event){
 event.preventDefault()
@@ -64,7 +72,6 @@ else{
   render(){
     return (
       <section id='Days'>
-        <h2>Ultimos dias</h2>
         <h2>Calendario</h2>
         <section className='calendar'>
          <section className='calendar-left-container'>
@@ -86,7 +93,7 @@ else{
              <Day key={dayIndex} day={day.day} schedule={day.schedule}  month={day.month} year={day.year}/>
         ))}
         {month.days.map((day,dayIndex)=>(
-        <Day key={dayIndex} date={day.date}  day={day.day} schedule={day.schedule} handleClick={this.handleClick.bind(this)}  month={day.month} year={day.year}/>
+        <Day key={dayIndex} date={day.date}  day={day.day} fullDay={day.fullDay} schedule={day.schedule} handleClick={this.handleClick.bind(this)}  month={day.month} year={day.year}/>
       ))}
 
       {month.nextDays.map((day,dayIndex)=>(
@@ -97,7 +104,7 @@ else{
         ))}
        </div>
       </section>
-      <Preview />
+      <Preview day={this.state.currentDay}/>
         </section>
 )
 }

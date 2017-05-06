@@ -65,6 +65,13 @@ body {
 #Days .calendar .container .page h2 {
   font-size: 1rem; }
 
+#Days #preview {
+  height: 50vh;
+  display: flex;
+  flex-flow: row wrap;
+  width: 70%;
+  margin: 0 auto; }
+
 #Turns > ul {
   display: flex;
   flex-flow: row wrap;

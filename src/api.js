@@ -100,8 +100,9 @@ fixedDays()
 
   for (var i = 1; i <= daysInMonth; i++) {
   let date=currentDay;
-  let day=moment(currentDay).format('D');
-  days.push({day:day,date:currentDay._d,schedule:'tarde'})
+  let day=moment(currentDay).format('D');;
+  let fullDay=moment(currentDay).format('dddd D');
+  days.push({day:day,fullDay:fullDay,date:currentDay._d,schedule:'tarde'})
   currentDay=moment(currentDay).add(1,'d');
   }
 
