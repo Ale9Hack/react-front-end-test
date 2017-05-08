@@ -79,7 +79,7 @@ export default class Days  extends Component{
       });
   }
 sendToDays(id,date){
-if(this.state.previousActiveDayID!='' && this.state.previousActiveDayID!=id){
+if(this.childs[this.state.previousActiveDayID]){
 this.childs[this.state.previousActiveDayID].disable();
 }
 this.setState({activeDay:date,previousActiveDayID:id})
