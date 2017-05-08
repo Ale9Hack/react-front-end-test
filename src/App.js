@@ -19,9 +19,8 @@ constructor(){
 }
 
 //Comunication between component
-passDaytoTurn(event){
-console.log(event.currentTarget.getAttribute('data-day'));  
-this.turns.show()
+passDaytoTurn(data){
+
 }
 
   render() {
@@ -36,7 +35,7 @@ this.turns.show()
           <h3> Ultimas Noticias </h3>
           <p>Content Content Content Content Content Content</p>
         </main>
-        <Days passDaytoTurn={this.passDaytoTurn.bind(this)}/>
+        <Days passDaytoTurn={(data)=>this.passDaytoTurn(data)}/>
         <Turns  ref={(turns) => { this.turns = turns; }}  />
       </section>
 )

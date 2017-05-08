@@ -2,14 +2,41 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import api from '../api';
 //static props declatation
-const Day=(props)=>{
-return(
-<article onClick={props.handleClick} className={props.status+' Day'} data-day={props.fullDay}>
-  <div className='container'>
-    <h2>{props.day}</h2>
+class Day extends Component{
+  constructor(props) {
+    super(props)
+    this.state={active:''}
+
+}
+
+enable(){
+this.setState({active:'active'})
+}
+disable(){
+  this.setState({active:'disable'})
+}
+handleClick(event){
+this.enable()
+this.props.sendToDays(this.props.id,this.props.date)
+}
+render(){
+return (
+<article onClick={(e)=>{this.handleClick(e)}} className={' Day' }>
+  <div className={this.state.active+' container'}>
+    <h2>{this.props.date.day}</h2>
   </div>
 </article>
-);
+)}
+}
+
+const DisableDay=(props)=>{
+return(
+  <article className={' Day' }>
+    <div className='container'>
+      <h2>none</h2>
+    </div>
+  </article>
+)
 }
 
 const DayOfWeek=(props)=>{
@@ -23,12 +50,12 @@ return(
 }
 
 const Preview=(props)=>{
-if(props.day){
+if(props.date){
 var button = <button type='button'>Continuar</button>;
 }
 return(
 <section id='preview'>
-<h2>{props.day}</h2>
+<h2>{props.date.fullDay}</h2>
 <p>Turno</p>
 <footer>
 {button}
@@ -42,18 +69,20 @@ export default class Days  extends Component{
   constructor(props) {
     super(props)
     this.state={months:[],
-      dayOfWeekStr:[],currentDay:''}
+      dayOfWeekStr:[],activeDay:'',previousActiveDayID:''}
+    this.childs=[];
     };
     componentDidMount() {
       api.createCalendar(null,{months:this.state.months}).then((res)=>{
         this.setState({months:res.months,dayOfWeekStr:api.updateDayOfTheWeekStr()});
+        this.props.passDaytoTurn('hola');
       });
   }
-handleClick(event){
-let day=event.currentTarget.getAttribute('data-day');
-console.log(day);
-this.setState({currentDay:day})
-//this.props.passDaytoTurn(event)
+sendToDays(id,date){
+if(this.state.previousActiveDayID!='' && this.state.previousActiveDayID!=id){
+this.childs[this.state.previousActiveDayID].disable();
+}
+this.setState({activeDay:date,previousActiveDayID:id})
 }
 moveCalendar (event){
 event.preventDefault()
@@ -90,21 +119,21 @@ else{
               ))}
           </header>
         {month.prevDays.map((day,dayIndex)=>(
-             <Day key={dayIndex} day={day.day} schedule={day.schedule}  month={day.month} year={day.year}/>
+             <DisableDay key={dayIndex} day={day.day} schedule={day.schedule}  month={day.month} year={day.year}/>
         ))}
         {month.days.map((day,dayIndex)=>(
-        <Day key={dayIndex} date={day.date}  day={day.day} fullDay={day.fullDay} schedule={day.schedule} handleClick={this.handleClick.bind(this)}  month={day.month} year={day.year}/>
+        <Day  date={day} ref={(child) => { this.childs.push(child)}} key={dayIndex} id={dayIndex} sendToDays={(id,date)=>this.sendToDays(id,date)}/>
       ))}
 
       {month.nextDays.map((day,dayIndex)=>(
-           <Day key={dayIndex} day={day.day}  schedule={day.schedule}  month={day.month} year={day.year}/>
+           <DisableDay key={dayIndex} day={day.day}  schedule={day.schedule}  month={day.month} year={day.year}/>
       ))}
 
     </section>
         ))}
        </div>
       </section>
-      <Preview day={this.state.currentDay}/>
+      <Preview date={this.state.activeDay}/>
         </section>
 )
 }

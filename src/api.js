@@ -88,7 +88,7 @@ var diff=firstDayOfTheMonth.diff(firstDayOfTheWeek,'days');
 for (var i = 0; i < diff; i++) {
 prevDays.push({day:'none'})
 }
-var diff=lastDayOfTheWeek.diff(lastDayOfTheMonth,'days');
+diff=lastDayOfTheWeek.diff(lastDayOfTheMonth,'days');
 //Fix bug on 31 day. (diff=-1)
 diff=diff===-1?6:diff;
 for (var i = 0; i < diff; i++) {

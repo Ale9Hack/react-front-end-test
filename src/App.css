@@ -44,7 +44,8 @@ body {
 #Days .calendar .container .page > .Day {
   background: transparent;
   flex-basis: 14.2857%;
-  cursor: pointer; }
+  cursor: pointer;
+  background: #424242; }
 
 #Days .calendar .container .page > .Day > .container {
   justify-content: center;
@@ -52,8 +53,10 @@ body {
   width: calc(100% - 1px);
   border-style: solid;
   border-width: 1px;
-  border-color: black;
-  background: #424242; }
+  border-color: black; }
+
+#Days .calendar .container .page > .Day > .active {
+  background-color: blue; }
 
 #Days .calendar .container .page .day-of-week .container {
   height: 100%;
