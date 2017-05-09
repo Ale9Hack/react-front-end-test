@@ -6,17 +6,17 @@ class Day extends Component{
   constructor(props) {
     super(props)
     this.state={active:''}
-
 }
 
-enable(){
-this.setState({active:'active'})
+enable(cssClass){
+  this.setState({active:' '+cssClass+ ' '})
+  return true;
 }
-disable(){
-  this.setState({active:'disable'})
+disable(cssClass){
+  this.setState({active:' '+cssClass+ ' '})
+  return false;
 }
 handleClick(event){
-this.enable()
 this.props.sendToDays(this.props.id,this.props.date)
 }
 render(){
@@ -29,7 +29,55 @@ return (
 )}
 }
 
-const DisableDay=(props)=>{
+class DayPages extends Component{
+  constructor(props) {
+    super(props)
+    this.state={active:''}
+    this.days=[];
+}
+
+componentDidMount(){
+
+}
+
+enable(cssClass){
+  setTimeout(()=> {
+  this.setState({active:' '+cssClass+ ' '})
+},10);
+return true;
+}
+disable(cssClass){
+  setTimeout(()=> {
+  this.setState({active:' '+cssClass+ ' '})
+},10);
+  return false;
+}
+
+render(){
+return (
+  <section key={this.props.monthIndex} className={'page'+this.state.active}>
+   <header>
+     <h2 className='month-name'>{this.props.month.name}</h2>
+       {this.props.dayOfWeekStr.map((dayOfWeek,index)=>(
+         <DayOfWeek key={index}  day={dayOfWeek} />
+       ))}
+   </header>
+ {this.props.month.prevDays.map((day,dayIndex)=>(
+      <DayDisable key={dayIndex} day={day.day} schedule={day.schedule}  month={day.month} year={day.year}/>
+ ))}
+ {this.props.month.days.map((day,dayIndex)=>(
+ <Day  date={day} ref={(child) => { this.days[dayIndex]=child;}} key={dayIndex} id={dayIndex} sendToDays={this.props.sendToDays}/>
+))}
+{this.props.month.nextDays.map((day,dayIndex)=>(
+    <DayDisable key={dayIndex} day={day.day}  schedule={day.schedule}  month={day.month} year={day.year}/>
+))}
+
+</section>
+)
+}
+}
+
+const DayDisable=(props)=>{
 return(
   <article className={' Day' }>
     <div className='container'>
@@ -49,7 +97,7 @@ return(
 );
 }
 
-const Preview=(props)=>{
+const DayPreview=(props)=>{
 if(props.date){
 var button = <button type='button'>Continuar</button>;
 }
@@ -69,32 +117,71 @@ export default class Days  extends Component{
   constructor(props) {
     super(props)
     this.state={months:[],
-      dayOfWeekStr:[],activeDay:'',previousActiveDayID:''}
-    this.childs=[];
+      dayOfWeekStr:[],activeDay:''}
+      this.pages=[];
+      this.enabledDay=false
+      this.previousActiveDayID=0;
+      this.activeMonthID=0;
+      this.previousActiveMonthID=0;
     };
-    componentDidMount() {
+
+  componentDidMount() {
       api.createCalendar(null,{months:this.state.months}).then((res)=>{
-        this.setState({months:res.months,dayOfWeekStr:api.updateDayOfTheWeekStr()});
-        this.props.passDaytoTurn('hola');
+        this.setState({months:res.months,
+          dayOfWeekStr:api.updateDayOfTheWeekStr()});
+        //this.props.passDaytoTurn();
+        this.pages[this.activeMonthID].enable('active')
       });
   }
+
 sendToDays(id,date){
-if(this.childs[this.state.previousActiveDayID]){
-this.childs[this.state.previousActiveDayID].disable();
+
+  if(id!=this.previousActiveDayID){
+    this.enabledDay=this.pages[this.activeMonthID].days[id].enable('active')
+    this.pages[this.activeMonthID].days[this.previousActiveDayID].disable('');
 }
-this.setState({activeDay:date,previousActiveDayID:id})
+  else if(this.enabledDay===true){
+    this.enabledDay=this.pages[this.activeMonthID].days[id].disable('');
+    date='';
 }
-moveCalendar (event){
-event.preventDefault()
-var target = event.currentTarget.id
-if (target=='calendar-right-button') {
-  api.createCalendar(null,{months:this.state.months}).then((res)=>{
-    this.setState({months:res.months,dayOfWeekStr:api.updateDayOfTheWeekStr()});
-  });
+  else{
+    this.enabledDay=this.pages[this.activeMonthID].days[id].enable('active')
 }
-else{
+  this.previousActiveDayID=id;
+  this.setState({activeDay:date})
+  }
+
+  moveCalendar (event){
+    event.preventDefault();
+    var target = event.currentTarget.id;
+    if(this.enabledDay===true){
+      this.enabledDay=this.pages[this.activeMonthID].days[this.previousActiveDayID].disable('');
+      this.setState({activeDay:''})
+  }
+    if (target=='calendar-right-button') {
+      this.pages[this.previousActiveMonthID].disable('');
+      this.activeMonthID+=1;
+      this.previousActiveMonthID=this.activeMonthID;
+      if(this.state.months.length<=this.activeMonthID){
+        api.createCalendar(null,{months:this.state.months}).then((res)=>{
+          this.setState({months:res.months});
+            this.pages[this.activeMonthID].enable('active');
+    });
+      }
+      else{
+         this.pages[this.activeMonthID].enable('active');
+      }
+}
+    else{
+      console.log(this.previousActiveMonthID,this.activeMonthID);
+      this.pages[this.previousActiveMonthID].disable('');
+      this.activeMonthID=this.activeMonthID>0?this.activeMonthID-1:0;
+      this.previousActiveMonthID=this.activeMonthID
+      this.pages[this.activeMonthID].enable('active');
+    }
 
 }
+deleteCalendar(){
 
 }
 
@@ -111,29 +198,11 @@ else{
          </section>
          <div className='container'>
          {this.state.months.map((month,monthIndex)=>(
-         <section key={monthIndex} className='page'>
-          <header>
-            <h2 className='month-name'>{month.name}</h2>
-              {this.state.dayOfWeekStr.map((dayOfWeek,index)=>(
-                <DayOfWeek key={index}  day={dayOfWeek} />
-              ))}
-          </header>
-        {month.prevDays.map((day,dayIndex)=>(
-             <DisableDay key={dayIndex} day={day.day} schedule={day.schedule}  month={day.month} year={day.year}/>
-        ))}
-        {month.days.map((day,dayIndex)=>(
-        <Day  date={day} ref={(child) => { this.childs.push(child)}} key={dayIndex} id={dayIndex} sendToDays={(id,date)=>this.sendToDays(id,date)}/>
-      ))}
-
-      {month.nextDays.map((day,dayIndex)=>(
-           <DisableDay key={dayIndex} day={day.day}  schedule={day.schedule}  month={day.month} year={day.year}/>
-      ))}
-
-    </section>
+          <DayPages ref={(child)=>{this.pages[monthIndex]=child}} key={monthIndex} month={month} dayOfWeekStr={this.state.dayOfWeekStr} sendToDays={(id,date)=>this.sendToDays(id,date)} />
         ))}
        </div>
       </section>
-      <Preview date={this.state.activeDay}/>
+      <DayPreview date={this.state.activeDay}/>
         </section>
 )
 }
@@ -141,4 +210,8 @@ else{
 //propTypes Declatation only in child to parent comunication
 Days.propTypes = {
   passDaytoTurn: PropTypes.func,
+};
+
+DayPages.propTypes = {
+  sendToDays: PropTypes.func,
 };

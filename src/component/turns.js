@@ -41,7 +41,7 @@ hidden(event){
 
 render(){
 return (
-<section id='Turns' className={this.state.display==true?' active':' '}>
+<section id='Turns' className={this.state.display==true?' active ':' '}>
  <button type="button" onClick={this.hidden} >Cerrar X</button>
   <h2>Turnos para hoy</h2>
   <ul className='container'>

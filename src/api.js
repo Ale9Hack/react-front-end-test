@@ -1,41 +1,5 @@
 import moment from './../node_modules/moment-timezone';
 moment.locale('es');
-/*
-fetch("http://127.0.0.1:3000/api/setday",{
-  headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    method: "post",
-    body: qs.stringify({
-            date: t
-          })
-})
-.then(function(res){ return res.json(); })
-.then(function(data){
-console.log(data);
-} )
-
-*/
-
-/*
-var url= 'http://127.0.0.1:3000/api/getdays'
-    var queryEncoded ='?'+qs.stringify(
-      {  page: 1, pagecount: 6, limit:1 },
-      { encodeValuesOnly: true }
-    )
-fetch(url+queryEncoded).then((res)=>res.json()).then((res)=>{
-var array=[];
-for (var i in res){
- res[i].schedule=moment(res[i].date).format('a');
- res[i].day =moment(res[i].date).format('dddd d');
- res[i].month=moment(res[i].date).format('MMMM');
- res[i].year=moment(res[i].date).format('YYYY');
- array.push(res[i]);
-}
-this.setState({array:array});
-})
-
-*/
 
 class Api {
   constructor(fake) {
@@ -53,7 +17,6 @@ class Api {
      }
    }
 }
-
 
 updateDayOfTheWeekStr(){
   var width = window.innerWidth, height = window.innerHeight
@@ -105,8 +68,6 @@ fixedDays()
   days.push({day:day,fullDay:fullDay,date:currentDay._d,schedule:'tarde'})
   currentDay=moment(currentDay).add(1,'d');
   }
-
-  console.log(days);
   months.push({name:month,days:days,prevDays:prevDays,nextDays:nextDays})
   resolve({months:months})
 })}
@@ -157,3 +118,41 @@ getTurns(options,callback){
 }
 
 export default (new Api(true))
+
+
+/*
+fetch("http://127.0.0.1:3000/api/setday",{
+  headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    method: "post",
+    body: qs.stringify({
+            date: t
+          })
+})
+.then(function(res){ return res.json(); })
+.then(function(data){
+console.log(data);
+} )
+
+*/
+
+/*
+var url= 'http://127.0.0.1:3000/api/getdays'
+    var queryEncoded ='?'+qs.stringify(
+      {  page: 1, pagecount: 6, limit:1 },
+      { encodeValuesOnly: true }
+    )
+fetch(url+queryEncoded).then((res)=>res.json()).then((res)=>{
+var array=[];
+for (var i in res){
+ res[i].schedule=moment(res[i].date).format('a');
+ res[i].day =moment(res[i].date).format('dddd d');
+ res[i].month=moment(res[i].date).format('MMMM');
+ res[i].year=moment(res[i].date).format('YYYY');
+ array.push(res[i]);
+}
+this.setState({array:array});
+})
+
+*/
