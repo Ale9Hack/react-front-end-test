@@ -30,46 +30,76 @@ updateDayOfTheWeekStr(){
 createCalendar(options,data,callback){
 return new Promise((resolve,reject)=>{
   var perPage=data.perPage;
-  var months=Array.isArray(data.months)?data.months:[];
+  var month=data.month
   var days=[]
   var prevDays=[]
   var nextDays=[]
 // options time
   var fixStartWeek=1
-  var isNext=months.length>0?months.length:0;
-  var firstDayOfTheMonth=moment().add(isNext,'month').startOf('month')
-  var lastDayOfTheMonth=moment().add(isNext,'month').endOf('month')
-  var month=firstDayOfTheMonth.format('MMMM')
+  var monthGlobalIndex=data.monthGlobalIndex;
+  var firstDayOfTheMonth=moment().add(monthGlobalIndex,'month').startOf('month')
+  var lastDayOfTheMonth=moment().add(monthGlobalIndex,'month').endOf('month')
+  var name=firstDayOfTheMonth.format('MMMM')
   var firstDayOfTheWeek=moment(firstDayOfTheMonth).startOf('isoWeek').subtract(fixStartWeek,'days');
   var lastDayOfTheWeek=moment(lastDayOfTheMonth).endOf('isoWeek').subtract(fixStartWeek,'days');
-  var currentDay=firstDayOfTheMonth;
-  var daysInMonth=moment().add(isNext,'month').daysInMonth();
 
-//Fixed day of prev month and next month
-function fixedDays(){
-var diff=firstDayOfTheMonth.diff(firstDayOfTheWeek,'days');
-for (var i = 0; i < diff; i++) {
-prevDays.push({day:'none'})
-}
-diff=lastDayOfTheWeek.diff(lastDayOfTheMonth,'days');
-//Fix bug on 31 day. (diff=-1)
-diff=diff===-1?6:diff;
-for (var i = 0; i < diff; i++) {
-nextDays.push({day:'none'})
-}
-}
-fixedDays()
 
+function addDays(str,diff){
+var array=[];
+class ChangeDay{
+  constructor(str){
+    if(str==='inMonth'){
+    this.currentDay=firstDayOfTheMonth
+    this.op=()=>moment(this.currentDay).add(1,'days')
+    }
+    else if(str==='prevMonth'){
+      this.currentDay=moment(firstDayOfTheMonth).subtract(1,'days')
+      this.op=()=>moment(this.currentDay).subtract(1,'days');
+    }
+    else if(str==='nextMonth'){
+      console.log('next');
+      this.currentDay=moment(lastDayOfTheMonth).add(1,'days')
+      this.op=()=>moment(this.currentDay).add(1,'days');
+}}}
+
+var changeDay=new ChangeDay(str)
+if(diff>0){
+  var daysInMonth=diff
+  console.log(true);
+  }
+  else if(diff===0){
+    var daysInMonth=diff
+  }
+else{
+var daysInMonth=moment().add(monthGlobalIndex,'month').daysInMonth();
+}
+console.log(diff,daysInMonth);
 
   for (var i = 1; i <= daysInMonth; i++) {
-  let date=currentDay;
-  let day=moment(currentDay).format('D');;
-  let fullDay=moment(currentDay).format('dddd D');
-  days.push({day:day,fullDay:fullDay,date:currentDay._d,schedule:'tarde'})
-  currentDay=moment(currentDay).add(1,'d');
+  let date=changeDay.currentDay._d;
+  let day=moment(changeDay.currentDay).format('D');;
+  let fullDay=moment(changeDay.currentDay).format('dddd D');
+  array.push({day:day,fullDay:fullDay,date:date,schedule:'tarde'})
+  changeDay.currentDay=changeDay.op();
   }
-  months.push({name:month,days:days,prevDays:prevDays,nextDays:nextDays})
-  resolve({months:months})
+  return array;
+}
+days=addDays('inMonth');
+//Fixed day of prev month and next month
+function fixedDays(){
+    var array=[]
+    var diff=firstDayOfTheMonth.diff(firstDayOfTheWeek,'days');
+    array[0]=addDays('prevMonth',diff)
+    diff=lastDayOfTheWeek.diff(lastDayOfTheMonth,'days');
+    //Fix bug on 31 day. (diff=-1)
+    diff=diff===-1?6:diff;
+    array[1]=addDays('nextMonth',diff)
+    return array;
+  }
+  let extraDays=fixedDays();
+
+  month={name:name,days:days,prevDays:extraDays[0],nextDays:extraDays[1]}
+  resolve({month:month})
 })}
 
 getDays(options,data,callback){

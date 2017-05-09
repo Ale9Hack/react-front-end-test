@@ -6,81 +6,102 @@ body {
 #Days .calendar {
   display: flex;
   justify-content: center; }
-  #Days .calendar .calendar-left-container {
-    order: 1; }
-  #Days .calendar .calendar-right-container {
-    order: 3; }
-  #Days .calendar .container {
-    order: 2;
-    height: 50vh;
-    width: 70%;
-    position: relative;
-    overflow: hidden; }
-    #Days .calendar .container .page {
-      display: flex;
-      flex-flow: row wrap;
-      justify-content: space-between;
-      width: 100%;
-      height: calc(100% - 2px);
-      border-style: solid;
-      border-color: black;
-      border-width: 1px;
-      position: absolute;
-      visibility: hidden;
-      opacity: 0;
-      z-index: 1;
-      transition: visibility 0s , opacity 1s, transform 1s; }
-      #Days .calendar .container .page > header {
-        flex-basis: 100%;
-        display: flex;
-        flex-flow: row wrap; }
-        #Days .calendar .container .page > header > .month-name {
-          flex-basis: 100%;
-          background: red;
-          margin: 0; }
-        #Days .calendar .container .page > header > .day-of-week {
-          flex-basis: 14.2857%; }
-      #Days .calendar .container .page > .Day {
-        background: transparent;
-        flex-basis: 14.2857%;
-        cursor: pointer;
-        background: #424242; }
-        #Days .calendar .container .page > .Day > .container {
-          justify-content: center;
-          height: calc(100% - 1px);
-          width: calc(100% - 1px);
-          border-style: solid;
-          border-width: 1px;
-          border-color: black; }
-        #Days .calendar .container .page > .Day > .active {
-          background-color: #3f51b5; }
-      #Days .calendar .container .page .day-of-week .container {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: center; }
-      #Days .calendar .container .page h2 {
-        font-size: 1rem; }
-    #Days .calendar .container > .active {
-      position: absolute;
-      top: 0;
-      left: 0;
-      visibility: visible;
-      opacity: 1;
-      z-index: 1000; }
-    #Days .calendar .container > .left-fade-in {
-      left: -100; }
-    #Days .calendar .container > .left-fade-out {
-      left: 100; }
-    #Days .calendar .container > .left-transition {
-      left: 0; }
-    #Days .calendar .container > .right-fade-in {
-      right: -100; }
-    #Days .calendar .container > .right-fade-out {
-      right: 100; }
-    #Days .calendar .container > .right-transition {
-      right: 0; }
+
+#Days .calendar .calendar-left-container {
+  order: 1; }
+
+#Days .calendar .calendar-right-container {
+  order: 3; }
+
+#Days .calendar > .container {
+  order: 2;
+  height: 50vh;
+  width: 70%;
+  position: relative; }
+
+#Days .calendar > .container > span > .page {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+  position: absolute;
+  top: 0;
+  left: 0; }
+
+#Days .calendar > .container > span > .page > header {
+  flex-basis: 100%;
+  display: flex;
+  flex-flow: row wrap; }
+
+#Days .calendar > .container > span > .page > header > .month-name {
+  flex-basis: 100%;
+  background: red;
+  margin: 0; }
+
+#Days .calendar > .container > span > .page > header > .day-of-week {
+  flex-basis: 14.2857%; }
+
+#Days .calendar > .container > span > .page > .Day {
+  background: transparent;
+  flex-basis: 14.2857%;
+  cursor: pointer;
+  background: #424242; }
+
+#Days .calendar > .container > span > .page > .Day > .container {
+  justify-content: center;
+  height: calc(100% - 1px);
+  width: calc(100% - 1px);
+  border-style: solid;
+  border-width: 1px;
+  border-color: black; }
+
+#Days .calendar > .container > span > .page > .Day > .active {
+  background-color: #3f51b5; }
+
+#Days .calendar > .container > span > .page .day-of-week .container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center; }
+
+#Days .calendar > .container > span > .page h2 {
+  font-size: 1rem; }
+
+#Days .calendar > .container > span > .right-enter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: visible;
+  opacity: 1;
+  z-index: 1000;
+  transform: translate(100vw); }
+
+#Days .calendar > .container > span > .right-enter-active {
+  position: absolute;
+  opacity: 1;
+  z-index: 1000;
+  transform: translate(0vw);
+  transition: visibility 0s , opacity 1s, transform 1s; }
+
+#Days .calendar > .container > span > .right-leave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: visible;
+  opacity: 1;
+  z-index: 1; }
+
+#Days .calendar > .container > span > .right-leave-active {
+  position: absolute;
+  opacity: 1;
+  z-index: 1;
+  transform: translate(-100vw);
+  transition: visibility 0s , opacity 1s, transform 1s; }
 
 #Days #preview {
   height: 50vh;
@@ -88,8 +109,9 @@ body {
   flex-flow: row wrap;
   width: 70%;
   margin: 0 auto; }
-  #Days #preview > h2 {
-    color: #3f51b5; }
+
+#Days #preview > h2 {
+  color: #3f51b5; }
 
 #Turns > ul {
   display: flex;
@@ -97,33 +119,38 @@ body {
   justify-content: flex-start;
   background: #303030;
   padding: 0; }
-  #Turns > ul > li {
-    flex-basis: 100%;
-    height: 15vh;
-    list-style: none; }
-    #Turns > ul > li > article {
-      height: 100%;
-      position: relative;
-      color: white;
-      text-align: left; }
-      #Turns > ul > li > article > .container {
-        display: flex;
-        flex-flow: row wrap;
-        height: 100%;
-        width: 100%;
-        align-items: center;
-        align-content: center; }
-        #Turns > ul > li > article > .container h1, #Turns > ul > li > article > .container h2, #Turns > ul > li > article > .container h3, #Turns > ul > li > article > .container h4, #Turns > ul > li > article > .container h5, #Turns > ul > li > article > .container h6 {
-          flex-basis: 100%;
-          margin: 0 0 0 3vw; }
-    #Turns > ul > li > article:before {
-      content: '';
-      position: absolute;
-      top: 15%;
-      bottom: 15%;
-      left: 1vw;
-      width: 3px;
-      background: red; }
+
+#Turns > ul > li {
+  flex-basis: 100%;
+  height: 15vh;
+  list-style: none; }
+
+#Turns > ul > li > article {
+  height: 100%;
+  position: relative;
+  color: white;
+  text-align: left; }
+
+#Turns > ul > li > article > .container {
+  display: flex;
+  flex-flow: row wrap;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  align-content: center; }
+
+#Turns > ul > li > article > .container h1, #Turns > ul > li > article > .container h2, #Turns > ul > li > article > .container h3, #Turns > ul > li > article > .container h4, #Turns > ul > li > article > .container h5, #Turns > ul > li > article > .container h6 {
+  flex-basis: 100%;
+  margin: 0 0 0 3vw; }
+
+#Turns > ul > li > article:before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 1vw;
+  width: 3px;
+  background: red; }
 
 #Turns.active {
   display: block;

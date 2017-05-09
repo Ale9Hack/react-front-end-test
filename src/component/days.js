@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import api from '../api';
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 //static props declatation
+
 class Day extends Component{
   constructor(props) {
     super(props)
@@ -29,33 +31,29 @@ return (
 )}
 }
 
-class DayPages extends Component{
+class Calendar extends Component{
   constructor(props) {
     super(props)
-    this.state={active:''}
+    this.state={animation:''}
     this.days=[];
 }
 
 componentDidMount(){
-
 }
 
-enable(cssClass){
-  setTimeout(()=> {
-  this.setState({active:' '+cssClass+ ' '})
-},10);
-return true;
-}
-disable(cssClass){
-  setTimeout(()=> {
-  this.setState({active:' '+cssClass+ ' '})
-},10);
-  return false;
+move(animation){
+return new Promise((resolve,reject)=>{
+    this.setState({animation:animation},()=>{
+      resolve()
+    })
+})
 }
 
 render(){
 return (
-  <section key={this.props.monthIndex} className={'page'+this.state.active}>
+  <CSSTransitionGroup    transitionAppear={true} transitionName={this.state.animation}
+      transitionAppearTimeout={2000} transitionLeaveTimeout={2000} transitionEnterTimeout={1000}>
+  <section key={this.props.id} className={'page'}>
    <header>
      <h2 className='month-name'>{this.props.month.name}</h2>
        {this.props.dayOfWeekStr.map((dayOfWeek,index)=>(
@@ -73,15 +71,16 @@ return (
 ))}
 
 </section>
+</CSSTransitionGroup>
 )
 }
 }
 
 const DayDisable=(props)=>{
 return(
-  <article className={' Day' }>
+  <article className={' Day disable' }>
     <div className='container'>
-      <h2>none</h2>
+      <h2>{props.day}</h2>
     </div>
   </article>
 )
@@ -116,8 +115,8 @@ return(
 export default class Days  extends Component{
   constructor(props) {
     super(props)
-    this.state={months:[],
-      dayOfWeekStr:[],activeDay:''}
+    this.state={month:{name:'',days:[],prevDays:[],nextDays:[]},
+      dayOfWeekStr:[],activeDay:'',monthGlobalIndex:0,animation:'left'}
       this.pages=[];
       this.enabledDay=false
       this.previousActiveDayID=0;
@@ -126,11 +125,10 @@ export default class Days  extends Component{
     };
 
   componentDidMount() {
-      api.createCalendar(null,{months:this.state.months}).then((res)=>{
-        this.setState({months:res.months,
+      api.createCalendar(null,{month:this.state.month,monthGlobalIndex:this.state.monthGlobalIndex}).then((res)=>{
+        this.setState({month:res.month,
           dayOfWeekStr:api.updateDayOfTheWeekStr()});
         //this.props.passDaytoTurn();
-        this.pages[this.activeMonthID].enable('active')
       });
   }
 
@@ -155,33 +153,20 @@ sendToDays(id,date){
     event.preventDefault();
     var target = event.currentTarget.id;
     if(this.enabledDay===true){
-      this.enabledDay=this.pages[this.activeMonthID].days[this.previousActiveDayID].disable('');
       this.setState({activeDay:''})
   }
     if (target=='calendar-right-button') {
-      this.pages[this.previousActiveMonthID].disable('');
-      this.activeMonthID+=1;
-      this.previousActiveMonthID=this.activeMonthID;
-      if(this.state.months.length<=this.activeMonthID){
-        api.createCalendar(null,{months:this.state.months}).then((res)=>{
-          this.setState({months:res.months});
-            this.pages[this.activeMonthID].enable('active');
-    });
-      }
-      else{
-         this.pages[this.activeMonthID].enable('active');
-      }
+    this.calendar.move('right')
+  this.setState({monthGlobalIndex:this.state.monthGlobalIndex+1},()=>{
+    api.createCalendar(null,{month:this.state.month,monthGlobalIndex:this.state.monthGlobalIndex}).then((res)=>{
+      this.setState({month:res.month,animation:'right'});
+    //this.props.passDaytoTurn();
+  });
+})
 }
     else{
-      console.log(this.previousActiveMonthID,this.activeMonthID);
-      this.pages[this.previousActiveMonthID].disable('');
-      this.activeMonthID=this.activeMonthID>0?this.activeMonthID-1:0;
-      this.previousActiveMonthID=this.activeMonthID
-      this.pages[this.activeMonthID].enable('active');
-    }
 
-}
-deleteCalendar(){
+    }
 
 }
 
@@ -197,12 +182,10 @@ deleteCalendar(){
         <button type='button' id='calendar-right-button'  onClick={this.moveCalendar.bind(this)} >Right</button>
          </section>
          <div className='container'>
-         {this.state.months.map((month,monthIndex)=>(
-          <DayPages ref={(child)=>{this.pages[monthIndex]=child}} key={monthIndex} month={month} dayOfWeekStr={this.state.dayOfWeekStr} sendToDays={(id,date)=>this.sendToDays(id,date)} />
-        ))}
+           <Calendar ref={(child)=>{this.calendar=child}} month={this.state.month} id={this.state.monthGlobalIndex} dayOfWeekStr={this.state.dayOfWeekStr} animation={this.state.animation}/>
        </div>
       </section>
-      <DayPreview date={this.state.activeDay}/>
+      <DayPreview  date={this.state.activeDay}/>
         </section>
 )
 }
@@ -212,6 +195,6 @@ Days.propTypes = {
   passDaytoTurn: PropTypes.func,
 };
 
-DayPages.propTypes = {
+Calendar.propTypes = {
   sendToDays: PropTypes.func,
 };

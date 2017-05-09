@@ -18,26 +18,24 @@ order: 1;
 .calendar-right-container{
 order: 3;
 }
-.container{
+&>.container{
   order: 2;
   height: 50vh;
   width: 70%;
   position: relative;
-  overflow: hidden;
-.page{
+  &>span{
+&>.page{
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
-  width: 100%;
+  width: calc(100% - 2px);
   height: calc(100% - 2px);
   border-style: solid;
   border-color: black;
   border-width: 1px;
   position: absolute;
-  visibility: hidden;
-  opacity: 0;
-  z-index: 1;
-  transition: visibility 0s , opacity 1s, transform 1s;
+  top: 0;
+  left: 0;
 &>header{
 flex-basis: 100%;
 display: flex;
@@ -85,38 +83,42 @@ h2{
 font-size: 1rem;
 }
 }
-&>.active{
+&>.right-enter{
 position: absolute;
 top: 0;
 left: 0;
 visibility: visible;
 opacity: 1;
 z-index: 1000;
+transform: translate(100vw);
 }
 
-&>.left-fade-in{
-left:-100;
-}
-&>.left-fade-out{
-left:100;
-}
-
-&>.left-transition{
-left:0;
+&>.right-enter-active{
+position: absolute;
+opacity: 1;
+z-index: 1000;
+transform: translate(0vw);
+transition: visibility 0s , opacity 1s, transform 1s;
 }
 
-&>.right-fade-in{
-right: -100;
-}
-&>.right-fade-out{
-right:100;
-}
-
-&>.right-transition{
-right:0;
+&>.right-leave{
+position: absolute;
+top: 0;
+left: 0;
+visibility: visible;
+opacity: 1;
+z-index: 1;
 }
 
+&>.right-leave-active{
+position: absolute;
+opacity: 1;
+z-index: 1;
+transform: translate(-100vw);
+transition: visibility 0s , opacity 1s, transform 1s;
+}
 
+}
 }
 }
 #preview{
