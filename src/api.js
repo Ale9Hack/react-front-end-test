@@ -57,7 +57,6 @@ class ChangeDay{
       this.op=()=>moment(this.currentDay).subtract(1,'days');
     }
     else if(str==='nextMonth'){
-      console.log('next');
       this.currentDay=moment(lastDayOfTheMonth).add(1,'days')
       this.op=()=>moment(this.currentDay).add(1,'days');
 }}}
@@ -65,7 +64,6 @@ class ChangeDay{
 var changeDay=new ChangeDay(str)
 if(diff>0){
   var daysInMonth=diff
-  console.log(true);
   }
   else if(diff===0){
     var daysInMonth=diff
@@ -73,7 +71,7 @@ if(diff>0){
 else{
 var daysInMonth=moment().add(monthGlobalIndex,'month').daysInMonth();
 }
-console.log(diff,daysInMonth);
+//console.log(diff,daysInMonth);
 
   for (var i = 1; i <= daysInMonth; i++) {
   let date=changeDay.currentDay._d;

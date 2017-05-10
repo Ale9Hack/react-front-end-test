@@ -7,17 +7,45 @@ body {
   display: flex;
   justify-content: center; }
 
+#Days .calendar .calendar-left-container, #Days .calendar .calendar-right-container {
+  height: 55vh; }
+
+#Days .calendar .calendar-left-container button, #Days .calendar .calendar-right-container button {
+  height: 100%;
+  color: white;
+  background: #222;
+  width: 60px;
+  outline: none;
+  border-color: #222;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 10px; }
+
+#Days .calendar .calendar-left-container button:focus, #Days .calendar .calendar-left-container button::-moz-focus-inner, #Days .calendar .calendar-right-container button:focus, #Days .calendar .calendar-right-container button::-moz-focus-inner {
+  outline: none;
+  border: 0; }
+
 #Days .calendar .calendar-left-container {
-  order: 1; }
+  order: 1;
+  margin-right: 10px; }
 
 #Days .calendar .calendar-right-container {
-  order: 3; }
+  order: 3;
+  margin-left: 10px; }
 
 #Days .calendar > .container {
   order: 2;
-  height: 50vh;
   width: 70%;
-  position: relative; }
+  height: 55vh;
+  position: relative;
+  overflow: hidden; }
+
+#Days .calendar > .container > span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%; }
 
 #Days .calendar > .container > span > .page {
   display: flex;
@@ -52,6 +80,8 @@ body {
   background: #424242; }
 
 #Days .calendar > .container > span > .page > .Day > .container {
+  display: flex;
+  align-items: center;
   justify-content: center;
   height: calc(100% - 1px);
   width: calc(100% - 1px);
@@ -59,8 +89,15 @@ body {
   border-width: 1px;
   border-color: black; }
 
+#Days .calendar > .container > span > .page > .Day > .container > h2 {
+  margin: 0; }
+
 #Days .calendar > .container > span > .page > .Day > .active {
   background-color: #3f51b5; }
+
+#Days .calendar > .container > span > .page > .disable {
+  opacity: 0.5;
+  cursor: not-allowed; }
 
 #Days .calendar > .container > span > .page .day-of-week .container {
   height: 100%;
@@ -104,14 +141,29 @@ body {
   transition: visibility 0s , opacity 1s, transform 1s; }
 
 #Days #preview {
-  height: 50vh;
+  height: 100px;
   display: flex;
   flex-flow: row wrap;
   width: 70%;
-  margin: 0 auto; }
+  margin: 0 auto;
+  justify-content: space-between; }
 
-#Days #preview > h2 {
+#Days #preview > * {
+  flex-basis: 33.33%;
+  position: relative; }
+
+#Days #preview > * > h2, #Days #preview > * > p, #Days #preview > * > button {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); }
+
+#Days #preview > * > h2 {
   color: #3f51b5; }
+
+#Turns {
+  display: none; }
 
 #Turns > ul {
   display: flex;
@@ -165,8 +217,10 @@ body {
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-  flex-basis: 15%; }
+  height: 80px; }
+
+.App-notice {
+  display: none; }
 
 .App-header {
   background-color: #222;
@@ -182,7 +236,18 @@ body {
   font-size: large; }
 
 .loginSection {
-  flex-basis: 15%; }
+  flex-basis: 10%;
+  background: #f44336;
+  color: white;
+  border-style: solid;
+  border-radius: 10px;
+  border-width: 2px;
+  border-color: #f44336;
+  outline: none; }
+
+.loginSection:focus, .loginSection::-moz-focus-inner {
+  outline: 0;
+  border: 0; }
 
 @keyframes App-logo-spin {
   from {

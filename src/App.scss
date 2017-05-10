@@ -1,3 +1,4 @@
+$defaultCalendarHeight:55vh;
 body{
   background: #303030;
   color: white;
@@ -9,21 +10,44 @@ body{
 display: flex;
 justify-content: center;
 .calendar-left-container,.calendar-right-container{
-
+height:$defaultCalendarHeight;
+button{
+  height: 100%;
+  color: white;
+  background: #222;
+  width: 60px;
+  outline: none;
+  border-color: #222;
+  border-width: 2px;
+  border-style: solid;;
+  border-radius: 10px;
+}
+button:focus,button::-moz-focus-inner{
+outline:none;
+border:0;
+}
 }
 .calendar-left-container{
 order: 1;
+margin-right: 10px;
 }
 
 .calendar-right-container{
 order: 3;
+margin-left: 10px;
 }
 &>.container{
   order: 2;
-  height: 50vh;
-  width: 70%;
-  position: relative;
+width: 70%;
+height: $defaultCalendarHeight;
+position: relative;
+overflow: hidden;
   &>span{
+position: absolute;
+top: 0;
+left: 0;
+height: 100%;
+width: 100%;
 &>.page{
   display: flex;
   flex-flow: row wrap;
@@ -59,16 +83,25 @@ flex-basis: 14.2857%;
 cursor: pointer;
 background: #424242;
 &>.container{
+display: flex;
+align-items: center;
 justify-content: center;
 height:calc(100% - 1px);
 width: calc(100% - 1px);
 border-style:solid;
 border-width: 1px;
 border-color: black;
+&>h2{
+  margin: 0;
+}
 }
 &>.active{
 background-color: #3f51b5;
 }
+}
+&>.disable{
+  opacity: 0.5;
+  cursor: not-allowed;;
 }
 .day-of-week{
 .container{
@@ -122,19 +155,32 @@ transition: visibility 0s , opacity 1s, transform 1s;
 }
 }
 #preview{
-height: 50vh;
+height: 100px;
 display: flex;
 flex-flow: row wrap;
 width: 70%;
 margin: 0 auto;
-&>h2{
-  color: #3f51b5;
+justify-content: space-between;
+&>*{
+  flex-basis: 33.33%;
+  position: relative;
+  &>h2,&>p,&>button{
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  }
+  &>h2{
+    color: #3f51b5;
+  }
 }
+
 }
 
 }
 #Turns{
-
+display: none;
 &>ul{
   display: flex;
   flex-flow: row wrap;
@@ -194,9 +240,10 @@ width: 100%;
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
-  flex-basis: 15%;
 }
-
+.App-notice{
+  display: none;
+}
 .App-header {
   background-color: #222;
   height: 10vh;
@@ -213,7 +260,21 @@ width: 100%;
 }
 
 .loginSection{
-  flex-basis: 15%;
+  flex-basis: 10%;
+  background: #f44336;
+  color: white;
+  border-style: solid;
+  border-radius: 10px;
+  border-width: 2px;
+  border-color:#f44336;
+  outline: none;
+}
+.loginSection:focus,.loginSection::-moz-focus-inner{
+outline: 0;
+  border: 0;
+}
+.loginSection:active{
+
 }
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }

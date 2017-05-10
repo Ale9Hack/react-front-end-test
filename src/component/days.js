@@ -102,8 +102,12 @@ var button = <button type='button'>Continuar</button>;
 }
 return(
 <section id='preview'>
-<h2>{props.date.fullDay}</h2>
-<p>Turno</p>
+  <div className='container'>
+  <p>Turno</p>
+  </div>  
+<div className='container'>
+  <h2>{props.date.fullDay}</h2>
+</div>
 <footer>
 {button}
 </footer>
@@ -121,7 +125,7 @@ export default class Days  extends Component{
       this.enabledDay=false
       this.previousActiveDayID=0;
       this.activeMonthID=0;
-      this.previousActiveMonthID=0;
+      this.previousActiveMonthID=-1;
     };
 
   componentDidMount() {
@@ -133,20 +137,31 @@ export default class Days  extends Component{
   }
 
 sendToDays(id,date){
-
-  if(id!=this.previousActiveDayID){
-    this.enabledDay=this.pages[this.activeMonthID].days[id].enable('active')
-    this.pages[this.activeMonthID].days[this.previousActiveDayID].disable('');
-}
-  else if(this.enabledDay===true){
-    this.enabledDay=this.pages[this.activeMonthID].days[id].disable('');
-    date='';
-}
-  else{
-    this.enabledDay=this.pages[this.activeMonthID].days[id].enable('active')
-}
-  this.previousActiveDayID=id;
-  this.setState({activeDay:date})
+  if(id!=this.previousActiveDayID && this.enabledDay!=true){
+    this.setState({activeDay:date},()=>{
+      this.calendar.days[id].enable('active')
+      this.enabledDay=true;
+      this.previousActiveDayID=id;
+    })
+  }
+  else if(id!=this.previousActiveDayID && this.enabledDay==true){
+    this.setState({activeDay:date},()=>{
+    this.calendar.days[id].enable('active')
+    this.calendar.days[this.previousActiveDayID].disable('');
+    this.previousActiveDayID=id;
+  })}
+  else {
+    if(this.enabledDay===true){
+      this.setState({activeDay:''},()=>{
+      this.calendar.days[this.previousActiveDayID].disable('');
+      this.enabledDay=false
+    })}
+    else{
+      this.setState({activeDay:date},()=>{
+      this.calendar.days[id].enable('active')
+      this.enabledDay=true
+    })}
+  }
   }
 
   moveCalendar (event){
@@ -176,13 +191,13 @@ sendToDays(id,date){
         <h2>Calendario</h2>
         <section className='calendar'>
          <section className='calendar-left-container'>
-           <button type='button' id='calendar-left-button' onClick={this.moveCalendar.bind(this)}>Left</button>
+           <button type='button' id='calendar-left-button' onClick={this.moveCalendar.bind(this)}>-</button>
          </section>
          <section className='calendar-right-container'>
-        <button type='button' id='calendar-right-button'  onClick={this.moveCalendar.bind(this)} >Right</button>
+        <button type='button' id='calendar-right-button'  onClick={this.moveCalendar.bind(this)} >+</button>
          </section>
          <div className='container'>
-           <Calendar ref={(child)=>{this.calendar=child}} month={this.state.month} id={this.state.monthGlobalIndex} dayOfWeekStr={this.state.dayOfWeekStr} animation={this.state.animation}/>
+           <Calendar ref={(child)=>{this.calendar=child}} sendToDays={(id,date)=>this.sendToDays(id,date)} month={this.state.month} id={this.state.monthGlobalIndex} dayOfWeekStr={this.state.dayOfWeekStr} animation={this.state.animation}/>
        </div>
       </section>
       <DayPreview  date={this.state.activeDay}/>

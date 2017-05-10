@@ -29,7 +29,7 @@ passDaytoTurn(data){
     <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to {siteConfig.title}</h2>
-          <p className='loginSection'>Boton</p>
+          <button className='loginSection' type='button'>Login</button>
         </header>
         <main className="App-notice">
           <h3> Ultimas Noticias </h3>
