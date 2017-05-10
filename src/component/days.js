@@ -4,118 +4,12 @@ import api from '../api';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 //static props declatation
 
-class Day extends Component{
-  constructor(props) {
-    super(props)
-    this.state={active:''}
-}
-
-enable(cssClass){
-  this.setState({active:' '+cssClass+ ' '})
-  return true;
-}
-disable(cssClass){
-  this.setState({active:' '+cssClass+ ' '})
-  return false;
-}
-handleClick(event){
-this.props.sendToDays(this.props.id,this.props.date)
-}
-render(){
-return (
-<article onClick={(e)=>{this.handleClick(e)}} className={' Day' }>
-  <div className={this.state.active+' container'}>
-    <h2>{this.props.date.day}</h2>
-  </div>
-</article>
-)}
-}
-
-class Calendar extends Component{
-  constructor(props) {
-    super(props)
-    this.state={animation:''}
-    this.days=[];
-}
-
-componentDidMount(){
-}
-
-move(animation){
-return new Promise((resolve,reject)=>{
-    this.setState({animation:animation},()=>{
-      resolve()
-    })
-})
-}
-
-render(){
-return (
-  <CSSTransitionGroup    transitionAppear={true} transitionName={this.state.animation}
-      transitionAppearTimeout={2000} transitionLeaveTimeout={2000} transitionEnterTimeout={1000}>
-  <section key={this.props.id} className={'page'}>
-   <header>
-     <h2 className='month-name'>{this.props.month.name}</h2>
-       {this.props.dayOfWeekStr.map((dayOfWeek,index)=>(
-         <DayOfWeek key={index}  day={dayOfWeek} />
-       ))}
-   </header>
- {this.props.month.prevDays.map((day,dayIndex)=>(
-      <DayDisable key={dayIndex} day={day.day} schedule={day.schedule}  month={day.month} year={day.year}/>
- ))}
- {this.props.month.days.map((day,dayIndex)=>(
- <Day  date={day} ref={(child) => { this.days[dayIndex]=child;}} key={dayIndex} id={dayIndex} sendToDays={this.props.sendToDays}/>
-))}
-{this.props.month.nextDays.map((day,dayIndex)=>(
-    <DayDisable key={dayIndex} day={day.day}  schedule={day.schedule}  month={day.month} year={day.year}/>
-))}
-
-</section>
-</CSSTransitionGroup>
-)
-}
-}
-
-const DayDisable=(props)=>{
-return(
-  <article className={' Day disable' }>
-    <div className='container'>
-      <h2>{props.day}</h2>
-    </div>
-  </article>
-)
-}
-
-const DayOfWeek=(props)=>{
-return(
-<article className={props.status+' day-of-week'}>
-  <div className='container'>
-    <h2>{props.day}</h2>
-    </div>
-</article>
-);
-}
-
-const DayPreview=(props)=>{
-if(props.date){
-var button = <button type='button'>Continuar</button>;
-}
-return(
-<section id='preview'>
-  <div className='container'>
-  <p>Turno</p>
-  </div>  
-<div className='container'>
-  <h2>{props.date.fullDay}</h2>
-</div>
-<footer>
-{button}
-</footer>
-</section>
-);
-}
-
 //Component Declatation
+
+//Import sub Component
+import Calendar from './sub-component/calendar'
+import {DayPreview} from './sub-component/day-preview'
+
 export default class Days  extends Component{
   constructor(props) {
     super(props)
